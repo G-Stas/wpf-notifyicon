@@ -244,7 +244,15 @@ namespace Hardcodet.Wpf.TaskbarNotification
             ImageSource newValue = (ImageSource) e.NewValue;
 
             //resolving the ImageSource at design time is unlikely to work
-            if (!Util.IsDesignMode) Icon = newValue.ToIcon();
+            if(!Util.IsDesignMode)
+            {
+                try
+                {
+                    var newIcon = newValue.ToIcon();
+                    Icon = newIcon;
+                }
+                catch(Win32Exception) { }
+            }
         }
 
         #endregion

@@ -179,7 +179,15 @@ namespace Hardcodet.Wpf.TaskbarNotification
                 throw new ArgumentException(msg);
             }
 
-            return new Icon(streamInfo.Stream);
+            try
+            {
+                return new Icon(streamInfo.Stream);
+            }
+            finally
+            {
+                streamInfo.Stream.Close();
+                streamInfo.Stream.Dispose();
+            }
         }
 
         #endregion
