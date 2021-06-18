@@ -491,40 +491,44 @@ namespace Hardcodet.Wpf.TaskbarNotification
         private void OnToolTipChange(bool visible)
         {
             // if we don't have a tooltip, there's nothing to do here...
-            if (TrayToolTipResolved == null) return;
+            if(TrayToolTipResolved == null) return;
 
-            if (visible)
+            try
             {
-                if (IsPopupOpen)
+                if(visible)
                 {
-                    // ignore if we are already displaying something down there
-                    return;
+                    if(IsPopupOpen)
+                    {
+                        // ignore if we are already displaying something down there
+                        return;
+                    }
+
+                    var args = RaisePreviewTrayToolTipOpenEvent();
+                    if(args.Handled) return;
+
+                    TrayToolTipResolved.IsOpen = true;
+
+                    // raise attached event first
+                    if(TrayToolTip != null) RaiseToolTipOpenedEvent(TrayToolTip);
+
+                    // bubble routed event
+                    RaiseTrayToolTipOpenEvent();
                 }
+                else
+                {
+                    var args = RaisePreviewTrayToolTipCloseEvent();
+                    if(args.Handled) return;
 
-                var args = RaisePreviewTrayToolTipOpenEvent();
-                if (args.Handled) return;
+                    // raise attached event first
+                    if(TrayToolTip != null) RaiseToolTipCloseEvent(TrayToolTip);
 
-                TrayToolTipResolved.IsOpen = true;
+                    TrayToolTipResolved.IsOpen = false;
 
-                // raise attached event first
-                if (TrayToolTip != null) RaiseToolTipOpenedEvent(TrayToolTip);
-
-                // bubble routed event
-                RaiseTrayToolTipOpenEvent();
+                    // bubble event
+                    RaiseTrayToolTipCloseEvent();
+                }
             }
-            else
-            {
-                var args = RaisePreviewTrayToolTipCloseEvent();
-                if (args.Handled) return;
-
-                // raise attached event first
-                if (TrayToolTip != null) RaiseToolTipCloseEvent(TrayToolTip);
-
-                TrayToolTipResolved.IsOpen = false;
-
-                // bubble event
-                RaiseTrayToolTipCloseEvent();
-            }
+            catch (NullReferenceException) { }
         }
 
 
