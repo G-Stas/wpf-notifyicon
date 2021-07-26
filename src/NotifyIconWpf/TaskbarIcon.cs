@@ -529,6 +529,8 @@ namespace Hardcodet.Wpf.TaskbarNotification
                 }
             }
             catch (NullReferenceException) { }
+            //suppress random "The root Visual of a VisualTarget cannot have a parent" exception on TrayTooltipResolved.IsOpen property change
+            catch (ArgumentException) { }
         }
 
 
