@@ -50,7 +50,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
         /// <summary>
         /// Represents the current icon data.
         /// </summary>
-        private NotifyIconData iconData;
+        public NotifyIconData iconData;
 
         /// <summary>
         /// Receives messages from the taskbar icon.
